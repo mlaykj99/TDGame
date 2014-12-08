@@ -1,0 +1,64 @@
+*
+{
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+
+body
+{
+    font-size: 12pt;
+}
+
+#page
+{
+    height: 75vh;
+    width: 100vh;
+    border: 1px solid black;
+    margin: 5vh auto 0 auto;
+}
+
+#board
+{
+    height: 75vh;
+    width: 75vh;
+    background-color: green;
+    float: left;
+}
+
+/*Sidebar Elements*/
+
+#sidebar
+{
+    height: 75vh;
+    width: 25vh;
+    background-color: saddlebrown;
+    float: left;
+}
+
+#score
+{
+    height: 10vh;
+    width: 20vh;
+    border: 1px solid black;
+    margin: 3vh auto 0 auto;
+}
+
+#towerContainer
+{
+    height: 55vh;
+    width: 20vh;
+    border: 1px solid black;
+    margin: 4vh auto 0 auto;
+}
+
+/*Tower Stuff*/
+
+.towerButton
+{
+    height: 8vh;
+    width: 8vh;
+    background-color: #ad5a00;
+    border: .5vh solid #572d00;
+    margin: 1vh auto 0 auto;
+}

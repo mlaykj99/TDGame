@@ -45,6 +45,8 @@ img
     width: 75vh;
     background-color: green;
     float: left;
+
+    position: relative;
 }
 
 .tile
@@ -141,4 +143,13 @@ img
     color: white;
     font-size:1.5vh;
     text-align: center;
+}
+
+/*Enemy Stuff*/
+.enemy
+{
+    height: 2vh;
+    width: 2vh;
+    background-color: #000000;
+    position: absolute;
 }

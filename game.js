@@ -9,13 +9,35 @@ var onTowers = false;
 var money = 300;
 var lives = 15;
 
+/*
+* Tower Description
+*
+* Radius is in pixels or vh
+* upgrade_mult will determine cost of upgrade (factors in level)
+* level is the upgrade level
+*
+* damage -- self explanatory
+* speed is the rate of fire
+*/
+
 //Towers
 var towers =
 [
-    tower0 = {cost:100, upgrade_mult:.6, level: 1},
-    tower1 = {cost:150, upgrade_mult:.6, level: 1},
-    tower2 = {cost:200, upgrade_mult:.6, level: 1},
-    tower3 = {cost:250, upgrade_mult:.6, level: 1}
+    tower0 = {cost:100, upgrade_mult:.6, level: 1, radius: 100, damage: 10, speed: 10},
+    tower1 = {cost:150, upgrade_mult:.6, level: 1, radius: 300, damage: 20, speed: 7},
+    tower2 = {cost:200, upgrade_mult:.6, level: 1, radius: 125, damage: 50, speed: 5},
+    tower3 = {cost:250, upgrade_mult:.6, level: 1, radius: 200, damage: 25, speed: 10}
+];
+
+//Temporary enemies for testing
+var enemies =
+[
+    enemy0 = {health: 50, speed: 5},
+    enemy1 = {health: 50, speed: 5},
+    enemy2 = {health: 50, speed: 5},
+    enemy3 = {health: 50, speed: 5},
+    enemy4 = {health: 0, speed: 5},
+    enemy5 = {health: 50, speed: 5}
 ];
 
 var invalidSpaces = []; //holds the ids of the elements that aren't valid tower areas
@@ -28,7 +50,37 @@ window.onload = function()
     document.getElementById('tower0').onclick = select;
     document.getElementById('tower1').onclick = select;
     document.getElementById('deselect').onclick = function(){deselect(curTower);};
+
+    document.getElementById('start').onclick = start;
 };
+
+function start()
+{
+    var running = true;
+    var enemy;
+
+    for(var i = 0; i < enemies.length; i++)
+    {
+        enemy = createHTMLElement('div', 'e'+i, 'enemy', 'e');
+
+    }
+
+    while(running)
+    {
+        //Enemy AI
+        checkEnemiesStatus();
+        //Tower AI
+        if(enemies.length === 0){runnning = false}
+    }
+}
+
+function checkEnemiesStatus()
+{
+    for(var i = 0; i < enemies.length; i++)
+    {
+        if(enemies[i].health <= 0){enemies.splice(i); alert('Enemy Died ' + enemies);}
+    }
+}
 
 function createGameBoard()
 {

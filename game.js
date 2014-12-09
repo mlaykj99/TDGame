@@ -12,7 +12,7 @@ var lives = 15;
 /*
 * Tower Description
 *
-* Radius is in pixels or vh
+* Radius is in tiles for now
 * upgrade_mult will determine cost of upgrade (factors in level)
 * level is the upgrade level
 *
@@ -23,10 +23,10 @@ var lives = 15;
 //Towers
 var towers =
 [
-    tower0 = {cost:100, upgrade_mult:.6, level: 1, radius: 100, damage: 10, speed: 10},
-    tower1 = {cost:150, upgrade_mult:.6, level: 1, radius: 300, damage: 20, speed: 7},
-    tower2 = {cost:200, upgrade_mult:.6, level: 1, radius: 125, damage: 50, speed: 5},
-    tower3 = {cost:250, upgrade_mult:.6, level: 1, radius: 200, damage: 25, speed: 10}
+    tower0 = {cost:100, upgrade_mult:.6, level: 1, radius: 1, damage: 10, speed: 10},
+    tower1 = {cost:150, upgrade_mult:.6, level: 1, radius: 2, damage: 20, speed: 7},
+    tower2 = {cost:200, upgrade_mult:.6, level: 1, radius: 1, damage: 50, speed: 5},
+    tower3 = {cost:250, upgrade_mult:.6, level: 1, radius: 3, damage: 25, speed: 10}
 ];
 
 //Temporary enemies for testing
@@ -70,12 +70,25 @@ function start()
 
     }
 
-    while(running)
+    for(i = 0; i < currentTowers.length; i++)
     {
-        //Enemy AI
-        checkEnemiesStatus();
-        //Tower AI
-        if(enemies.length === 0){runnning = false}
+        setInterval(function(){towerShoot(currentTowers[i])},10*currentTowers[i]);
+    }
+}
+
+function towerShoot(tower)
+{
+    if(enemyInTowerRange(tower))
+    {
+
+    }
+}
+
+function enemyInTowerRange(tower)
+{
+    for(var i = 0; i < enemies.length; i++)
+    {
+        if(0){}
     }
 }
 
@@ -83,7 +96,7 @@ function checkEnemiesStatus()
 {
     for(var i = 0; i < enemies.length; i++)
     {
-        if(enemies[i].health <= 0){enemies.splice(i); alert('Enemy Died ' + enemies);}
+        if(enemies[i].health <= 0){enemies.splice(i);}
     }
 }
 
@@ -111,6 +124,8 @@ function createGameBoard()
     document.getElementById('board').innerHTML = result;
 
     //Add onclick and onmouseover
+    var x = 0;
+    var y = 0;
     for(i = 0; i < row; i++)
     {
         for(j = 0; j < col; j++)
@@ -128,7 +143,13 @@ function createGameBoard()
                                         validTile(prevElem);
                                     };
             element.onmouseleave = resetColor;
+
+            element.style.left = x+'vh';
+            element.style.top = y+'vh';
+            x+=5;
         }
+        y+=5;
+        x = 0;
     }
 
 }

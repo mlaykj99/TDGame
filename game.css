@@ -55,7 +55,8 @@ img
 {
     height: 5vh;
     width: 5vh;
-    float: left;
+    /*float: left;*/
+    position: absolute;
 }
 
 .clear{clear: both;}

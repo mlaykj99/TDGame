@@ -40,6 +40,9 @@ var enemies =
     enemy5 = {health: 50, speed: 5}
 ];
 
+//current towers on the map
+var currentTowers = [];
+
 var invalidSpaces = []; //holds the ids of the elements that aren't valid tower areas
 var prevElem = null;
 
@@ -53,6 +56,8 @@ window.onload = function()
 
     document.getElementById('start').onclick = start;
 };
+
+//Game Functionality -----------------------------------------------------------------------
 
 function start()
 {
@@ -81,6 +86,8 @@ function checkEnemiesStatus()
         if(enemies[i].health <= 0){enemies.splice(i); alert('Enemy Died ' + enemies);}
     }
 }
+
+//Board -----------------------------------------------------------------------
 
 function createGameBoard()
 {
@@ -125,6 +132,14 @@ function createGameBoard()
     }
 
 }
+
+//Towers -----------------------------------------------------------------------
+function showTowerInfo()
+{
+    document.getElementById('towerInfo').style.visibility = 'visible';
+}
+
+//Maps -----------------------------------------------------------------------
 
 function createPath(pathNum)
 {
@@ -187,6 +202,8 @@ function path2()
 
 }
 
+//Tiles -----------------------------------------------------------------------
+
 function inInvalidSpaces(element)
 {
     for(var i = 0; i < invalidSpaces.length; i++)
@@ -231,7 +248,7 @@ function checkTowerSelected(index, element)
         //Change mouseover stuff
         element.onmouseenter = null;
         element.onmouseleave = null;
-        element.onclick = null;//will be replased later
+        element.onclick = showTowerInfo;
 
         //replace with tower
         img = document.getElementById(getImgIdFromElementId(prevElem)).src = "res/tower"+index+".png";
@@ -254,6 +271,7 @@ function resetColor()
     else{document.getElementById(id).src = "res/road.png";}
 }
 
+//Selection and Deselection ---------------------------------------------------------
 function select()
 {
     if(curTower !== null){deselect(curTower);}
@@ -270,7 +288,9 @@ function deselect(tower)
     curTower = null;
 }
 
-//Creates element tags
+
+
+//Creates element tags ------------------------------------------------------------
 function createHTMLElement(elementType, id, classInfo, content)
 {
 

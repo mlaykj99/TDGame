@@ -35,6 +35,7 @@ img
     width: 100vh;
     border: 1vh solid black;
     margin: 5vh auto 0 auto;
+    position: relative;
 }
 
 /*Board Elements*/
@@ -46,7 +47,8 @@ img
     background-color: green;
     float: left;
 
-    position: relative;
+    position: absolute;
+    z-index: 1;
 }
 
 .tile
@@ -65,7 +67,7 @@ img
     height: 75vh;
     width: 25vh;
     background-color: saddlebrown;
-    float: left;
+    float: right;
 }
 
 #score
@@ -143,6 +145,20 @@ img
     color: white;
     font-size:1.5vh;
     text-align: center;
+}
+
+#towerInfo
+{
+    height: 15vh;
+    width: 25vh;
+    background-color: grey;
+
+    position: absolute;
+    z-index: 2;
+    visibility: hidden;
+
+    top: 10vh;
+    left: 10vh;
 }
 
 /*Enemy Stuff*/

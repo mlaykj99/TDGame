@@ -23,10 +23,10 @@ var lives = 15;
 //Towers
 var towers =
 [
-    tower0 = {cost:100, upgrade_mult:.6, level: 1, radius: 1, damage: 10, speed: 10},
-    tower1 = {cost:150, upgrade_mult:.6, level: 1, radius: 2, damage: 20, speed: 7},
-    tower2 = {cost:200, upgrade_mult:.6, level: 1, radius: 1, damage: 50, speed: 5},
-    tower3 = {cost:250, upgrade_mult:.6, level: 1, radius: 3, damage: 25, speed: 10}
+    tower0 = createTower(1),
+    tower1 = createTower(2),
+    tower2 = createTower(3),
+    tower3 = createTower(4)
 ];
 
 //Temporary enemies for testing
@@ -155,10 +155,22 @@ function createGameBoard()
 }
 
 //Towers -----------------------------------------------------------------------
-function showTowerInfo()
+function showTowerInfo(tower)
 {
-    document.getElementById('towerInfo').style.visibility = 'visible';
+    var element = document.getElementById('towerInfo');
+
+    element.style.visibility = 'visible';
+    element.style.left = 0;
 }
+function createTower(t)
+{
+    if(t === 1){this.cost=100; this.upgrade_mult = .6; this.level = 1; this.radius = 3; this.damage = 10; this.speed = 10; this.position = '';}
+    else if(t === 2){this.cost=200; this.upgrade_mult = .6; this.level = 1; this.radius = 2; this.damage = 15; this.speed = 7; this.position = '';}
+    else if(t === 3){this.cost=100; this.upgrade_mult = .6; this.level = 1; this.radius = 1; this.damage = 10; this.speed = 10; this.position = '';} //NYI
+    else if(t === 4){this.cost=100; this.upgrade_mult = .6; this.level = 1; this.radius = 1; this.damage = 10; this.speed = 10; this.position = '';} //NYI
+
+}
+
 
 //Maps -----------------------------------------------------------------------
 
@@ -269,7 +281,6 @@ function checkTowerSelected(index, element)
         //Change mouseover stuff
         element.onmouseenter = null;
         element.onmouseleave = null;
-        element.onclick = showTowerInfo;
 
         //replace with tower
         img = document.getElementById(getImgIdFromElementId(prevElem)).src = "res/tower"+index+".png";
@@ -279,6 +290,10 @@ function checkTowerSelected(index, element)
         money -= towers[index].cost;
         document.getElementById('money').innerHTML = "Gold: " + money;
 
+        //add tower to currentTowers
+        currentTowers.push(towers[index]);
+
+        element.onclick = function(){showTowerInfo(tower);};
         //deselect tower
         deselect(curTower);
     }

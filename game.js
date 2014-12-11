@@ -21,12 +21,12 @@ var lives = 15;
 */
 
 //Towers
-var towers =
+var towerOptions =
 [
-    tower0 = createTower(1),
-    tower1 = createTower(2),
-    tower2 = createTower(3),
-    tower3 = createTower(4)
+    tower0 = createTower(1,null),
+    tower1 = createTower(2,null)//,
+    //tower2 = createTower(3,null),
+    //tower3 = createTower(4,null)
 ];
 
 //Temporary enemies for testing
@@ -40,7 +40,7 @@ var enemies =
     enemy5 = {health: 50, speed: 5}
 ];
 
-//current towers on the map
+//current towerOptions on the map
 var currentTowers = [];
 
 var invalidSpaces = []; //holds the ids of the elements that aren't valid tower areas
@@ -155,20 +155,53 @@ function createGameBoard()
 }
 
 //Towers -----------------------------------------------------------------------
-function showTowerInfo(tower)
+function showTowerInfo(pos)
 {
     var element = document.getElementById('towerInfo');
+    var row;
+    var col;
+    var radius;
+    var inc;
+
+    //set tower info in div
 
     element.style.visibility = 'visible';
-    element.style.left = 0;
-}
-function createTower(t)
-{
-    if(t === 1){this.cost=100; this.upgrade_mult = .6; this.level = 1; this.radius = 3; this.damage = 10; this.speed = 10; this.position = '';}
-    else if(t === 2){this.cost=200; this.upgrade_mult = .6; this.level = 1; this.radius = 2; this.damage = 15; this.speed = 7; this.position = '';}
-    else if(t === 3){this.cost=100; this.upgrade_mult = .6; this.level = 1; this.radius = 1; this.damage = 10; this.speed = 10; this.position = '';} //NYI
-    else if(t === 4){this.cost=100; this.upgrade_mult = .6; this.level = 1; this.radius = 1; this.damage = 10; this.speed = 10; this.position = '';} //NYI
+    element.style.left = document.getElementById(pos.substring(0,(pos.indexOf('c')+1)) +
+                                                (parseInt(pos.substring((pos.indexOf('c')+1)))+1)).style.left;
+    element.style.top = parseInt(document.getElementById(pos).style.top.substring(0,document.getElementById(pos).style.top.length-2))-15 + 'vh';
 
+    //highlight radius
+    for(var i = 0; i < currentTowers.length; i++)
+    {
+        if(currentTowers[i].position == pos){radius = currentTowers[i].radius;}
+    }
+
+    row = parseInt(pos.substring(1,pos.indexOf('c')))-radius;
+    col = parseInt(pos.substring(pos.indexOf('c')+1))-radius;
+
+    inc = radius;
+    if(radius === 1){inc = 0;}
+    for(i = 0; i < 3+inc; i++) //3 because thats the possible rows around 1 tile
+    {
+        for(var j = 0; j < 3+inc; j++)//same as above but cols
+        {
+            element = document.getElementById('r'+(row+i)+'c'+(col+j));
+            if(element !== null && (row+radius !== row+i || col+radius !== col+j) && !inInvalidSpaces(element))
+            {
+                document.getElementById('img'+(row+i)+'-'+(col+j)).src = "res/grassT.png";
+            }
+        }
+    }
+}
+function createTower(t, pos)
+{
+    var tower;
+    if(t === 1){tower = {cost:100, upgrade_mult: .6, level: 1, radius : 2, damage: 10, speed: 10, position: pos};}
+    else if(t === 2){tower = {cost:200, upgrade_mult: .6, level: 1, radius : 1, damage: 15, speed: 5, position: pos};}
+    //else if(t === 3){this.cost=100; this.upgrade_mult = .6; this.level = 1; this.radius = 1; this.damage = 10; this.speed = 10; this.position = pos;} //NYI
+    //else if(t === 4){this.cost=100; this.upgrade_mult = .6; this.level = 1; this.radius = 1; this.damage = 10; this.speed = 10; this.position = pos;} //NYI
+
+    return tower;
 }
 
 
@@ -276,8 +309,10 @@ function validTile(element)
 function checkTowerSelected(index, element)
 {
     //if validTile and you can afford it place tower
-    if(validTile(element) && money >= towers[index].cost)
+    if(validTile(element) && money >= towerOptions[index].cost)
     {
+        var tower;
+
         //Change mouseover stuff
         element.onmouseenter = null;
         element.onmouseleave = null;
@@ -287,13 +322,14 @@ function checkTowerSelected(index, element)
         invalidSpaces.push(element.id);
 
         //update money
-        money -= towers[index].cost;
+        money -= towerOptions[index].cost;
         document.getElementById('money').innerHTML = "Gold: " + money;
 
         //add tower to currentTowers
-        currentTowers.push(towers[index]);
+        tower = createTower(Number(index)+1, element.id);
+        currentTowers.push(tower);
 
-        element.onclick = function(){showTowerInfo(tower);};
+        element.onclick = function(){showTowerInfo(this.id);};
         //deselect tower
         deselect(curTower);
     }
@@ -319,9 +355,14 @@ function select()
 
 function deselect(tower)
 {
-    tower.style.borderColor = curTowerBorder;
-    towerSelected = false;
-    curTower = null;
+    if(tower !== null)
+    {
+        tower.style.borderColor = curTowerBorder;
+        towerSelected = false;
+        curTower = null;
+    }
+
+    document.getElementById('towerInfo').style.visibility = 'hidden';
 }
 
 

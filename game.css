@@ -19,7 +19,8 @@ body
     background-image: url("res/bg.jpg");
     background-color: #000000;
     background-repeat: no-repeat;
-    background-size: 100%;
+    background-size: auto 150%;
+    background-position: center top;
     background-attachment: fixed;
 }
 
@@ -29,13 +30,61 @@ img
     max-width: 100%;
 }
 
+#container
+{
+    height: 77vh;
+    width: 127vh;
+    margin: 5vh 0 0 25vh;
+}
+
 #page
 {
     height: 75vh;
     width: 100vh;
     border: 1vh solid black;
-    margin: 5vh auto 0 auto;
+    float: left;
     position: relative;
+}
+
+#towerInfo
+{
+    height: 55vh;
+    width: 25vh;
+    background-color: grey;
+    float: left;
+    visibility: hidden;
+}
+
+/*Tower Info*/
+#upgrade
+{
+    height: 3vh;
+    width: 22vh;
+    float: left;
+}
+#level
+{
+    height: 3vh;
+    width: 3vh;
+    float: left;
+
+}
+#sell
+{
+    height: 3vh;
+    width: 25vh;
+    clear: both;
+}
+#info
+{
+    height: 10vh;
+    width: 25vh;
+    border-bottom: solid;
+}
+
+.text
+{
+    text-align: center;
 }
 
 /*Board Elements*/
@@ -139,27 +188,13 @@ img
     width: 8vh;
     background-color: darkred;
     border: .5vh solid white;
-    margin: 0 auto 0 auto;
-    clear: both;
+    margin: .5vh .5vh 1vh .65vh ;
+    float: left;
 
     padding-top: 3vh;
     color: white;
     font-size:1.5vh;
     text-align: center;
-}
-
-#towerInfo
-{
-    height: 15vh;
-    width: 25vh;
-    background-color: grey;
-
-    position: absolute;
-    z-index: 2;
-    visibility: hidden;
-
-    top: 10vh;
-    left: 10vh;
 }
 
 /*Enemy Stuff*/

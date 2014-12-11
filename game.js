@@ -2,6 +2,7 @@
  * Created by Josh on 12/6/2014.
  */
 var towerSelected = false;
+var placedTowerSelected = false;
 var curTower = null;
 var curTowerBorder = '#000000';
 var onTowers = false;
@@ -158,10 +159,8 @@ function createGameBoard()
 function showTowerInfo(pos)
 {
     var element = document.getElementById('towerInfo');
-    var row;
-    var col;
-    var radius;
-    var inc;
+
+    placedTowerSelected = true;
 
     //set tower info in div
 
@@ -171,6 +170,16 @@ function showTowerInfo(pos)
     element.style.top = parseInt(document.getElementById(pos).style.top.substring(0,document.getElementById(pos).style.top.length-2))-15 + 'vh';
 
     //highlight radius
+    setHighlight(pos);
+}
+
+function setHighlight(pos)
+{
+    var row;
+    var col;
+    var radius;
+    var inc;
+
     for(var i = 0; i < currentTowers.length; i++)
     {
         if(currentTowers[i].position == pos){radius = currentTowers[i].radius;}
@@ -190,9 +199,14 @@ function showTowerInfo(pos)
             {
                 document.getElementById('img'+(row+i)+'-'+(col+j)).src = "res/grassT.png";
             }
+            else if((row+radius !== row+i || col+radius !== col+j) && inInvalidSpaces(element))
+            {
+                document.getElementById('img'+(row+i)+'-'+(col+j)).src = "res/roadT.png";
+            }
         }
     }
 }
+
 function createTower(t, pos)
 {
     var tower;
@@ -339,14 +353,14 @@ function resetColor()
 {
     var id = getImgIdFromElementId(prevElem);
 
-    if(!inInvalidSpaces(prevElem)){ document.getElementById(id).src = "res/grass.png";}
-    else{document.getElementById(id).src = "res/road.png";}
+    if(!inInvalidSpaces(prevElem) && !placedTowerSelected){ document.getElementById(id).src = "res/grass.png";}
+    else if(!placedTowerSelected){document.getElementById(id).src = "res/road.png";}
 }
 
 //Selection and Deselection ---------------------------------------------------------
 function select()
 {
-    if(curTower !== null){deselect(curTower);}
+    deselect(curTower);
     curTower = this;
     curTowerBorder = curTower.style.backgroundColor;
     curTower.style.borderColor = 'white';
@@ -363,6 +377,10 @@ function deselect(tower)
     }
 
     document.getElementById('towerInfo').style.visibility = 'hidden';
+    placedTowerSelected = false;
+
+    //remove radius
+    setHighlight();
 }
 
 

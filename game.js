@@ -67,10 +67,21 @@ function start()
     }
 
     positionEnemies();
-    for(i = 0; i < enemies.length; i++)
+
+    setTimeout(function(){moveEnemy(enemies[0]);},100);
+    setTimeout(function(){moveEnemy(enemies[1]);},100);
+    setTimeout(function(){moveEnemy(enemies[2]);},100);
+    setTimeout(function(){moveEnemy(enemies[3]);},100);
+    setTimeout(function(){moveEnemy(enemies[4]);},100);
+    setTimeout(function(){moveEnemy(enemies[5]);},100);
+    setTimeout(function(){moveEnemy(enemies[6]);},100);
+    setTimeout(function(){moveEnemy(enemies[7]);},100);
+    setTimeout(function(){moveEnemy(enemies[8]);},100);
+    setTimeout(function(){moveEnemy(enemies[9]);},100);
+
+    for(i = 0; i < enemies.length; i++)//enemies.length; i++)
     {
-        interval = setInterval(function(){moveEnemy(enemies[i])},100);
-        enemies[i].interval = interval;
+        //setTimeout(function(){moveEnemy(enemies[i]);},100);
     }
 
     for(i = 0; i < currentTowers.length; i++)
@@ -82,13 +93,14 @@ function start()
 function positionEnemies()
 {
     var top;
-    var left = -5;
+    var left;
 
     top = (invalidSpaces[0].substring(1, invalidSpaces[0].indexOf('c'))) * 5.2; // * tile height
 
     //moves the enemy divs to be in a straight line off the board
     for(var i = 0; i < enemies.length; i++)
     {
+        left = -5-(i*3);
         document.getElementById('e'+i).style.top = top+'vh';
         document.getElementById('e'+i).style.left = left+'vh';
         document.getElementById('e'+i).style.visibility = 'hidden';
@@ -102,13 +114,20 @@ function moveEnemy(enemy)
     var left = Number(element.style.left.substring(0,element.style.left.indexOf('vh')));
 
     if(left === 0){element.style.visibility = 'visible';}
-    if(left >= 73){enemy.health = 0; dead = true;}
+    if(left >= 73)
+    {
+        enemy.health = 0;
+        dead = true;
+        lives -= 1;
+        document.getElementById('health').innerHTML = "Lives: " + lives;
+        element.style.visibility = 'hidden';
+    }
+    if(!dead){setTimeout(function(){moveEnemy(enemy)},100);}
     if(dead)
     {
-        alert(enemies);
+        //alert(enemies);
         enemies.splice(0);
-        alert(enemies);
-        clearInterval(enemy.interval);
+        //alert(enemies);
         return;
     }
 

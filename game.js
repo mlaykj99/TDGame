@@ -57,8 +57,8 @@ window.onload = function()
 function start()
 {
     var enemy;
-    var interval;
 
+    document.getElementById('start').onclick = null;
     for(var i = 0; i < 10; i++)
     {
         enemy = createHTMLElement('div', 'e'+i, 'enemy', '');
@@ -86,7 +86,7 @@ function start()
 
     for(i = 0; i < currentTowers.length; i++)
     {
-        setInterval(function(){towerShoot(currentTowers[i])},10*currentTowers[i].speed);
+        //setInterval(function(){towerShoot(currentTowers[i])},10*currentTowers[i].speed);
     }
 }
 
@@ -109,7 +109,8 @@ function positionEnemies()
 
 function moveEnemy(enemy)
 {
-    var dead = false;// = enemyDead(enemy);
+    var dead = false;
+    var index = enemyIndex(enemy);
     var element = document.getElementById(enemy.id);
     var left = Number(element.style.left.substring(0,element.style.left.indexOf('vh')));
 
@@ -120,14 +121,15 @@ function moveEnemy(enemy)
         dead = true;
         lives -= 1;
         document.getElementById('health').innerHTML = "Lives: " + lives;
-        element.style.visibility = 'hidden';
     }
     if(!dead){setTimeout(function(){moveEnemy(enemy)},100);}
     if(dead)
     {
-        //alert(enemies);
-        enemies.splice(0);
-        //alert(enemies);
+        //removes enemy from game
+        element.remove();
+        enemies.splice(index, 1);
+
+        if(enemies.length === 0){document.getElementById('start').onclick = start;}
         return;
     }
 
@@ -135,20 +137,17 @@ function moveEnemy(enemy)
     element.style.left = left+1+'vh';
 }
 
-function enemyDead(enemy)
+function enemyIndex(enemy)
 {
     var i;
-    var dead = false;
 
     if(enemy.health <= 0)
     {
         for(i = 0; i < enemies.length; i++)
         {
-            if(enemies[i] === enemy){break;}
+            if(enemies[i] === enemy){return i;}
         }
     }
-
-    return {dead: dead, index: i};
 }
 
 function towerShoot(tower)

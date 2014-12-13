@@ -59,14 +59,17 @@ img
 #upgrade
 {
     height: 3vh;
-    width: 22vh;
+    width: 21vh;
     float: left;
+    border-bottom: solid;
+    border-right: solid;
 }
 #level
 {
     height: 3vh;
-    width: 3vh;
+    width: 3.3vh;
     float: left;
+    border-bottom: solid;
 
 }
 #sell
@@ -74,10 +77,11 @@ img
     height: 3vh;
     width: 25vh;
     clear: both;
+    border-bottom: solid;
 }
 #info
 {
-    height: 10vh;
+    height: 30vh;
     width: 25vh;
     border-bottom: solid;
 }

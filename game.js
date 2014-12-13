@@ -10,6 +10,8 @@ var onTowers = false;
 var money = 300;
 var lives = 15;
 
+var currentRadiusTiles = [];
+
 /*
 * Tower Description
 *
@@ -73,7 +75,7 @@ function start()
 
     for(i = 0; i < currentTowers.length; i++)
     {
-        setInterval(function(){towerShoot(currentTowers[i])},10*currentTowers[i]);
+        setInterval(function(){towerShoot(currentTowers[i])},10*currentTowers[i].speed);
     }
 }
 
@@ -159,15 +161,25 @@ function createGameBoard()
 function showTowerInfo(pos)
 {
     var element = document.getElementById('towerInfo');
+    var tower;
 
+    //get the tower reference
+    for(var i = 0; i < currentTowers.length; i++)
+    {
+        if(currentTowers[i].position == pos){tower = currentTowers[i];}
+    }
+
+    //remove other selections and set selection to current tower
+    deselect(null);
     placedTowerSelected = true;
 
     //set tower info in div
+    document.getElementById('info').innerHTML = "<P>DMG: " + tower.damage + "</p>" +
+                                                "<P>SPEED: " + tower.speed + "</p>" +
+                                                "<P>RANGE: " + tower.range + "</p>" +
+                                                "<P>COST: " + tower.cost + "</p>";
 
     element.style.visibility = 'visible';
-    element.style.left = document.getElementById(pos.substring(0,(pos.indexOf('c')+1)) +
-                                                (parseInt(pos.substring((pos.indexOf('c')+1)))+1)).style.left;
-    element.style.top = parseInt(document.getElementById(pos).style.top.substring(0,document.getElementById(pos).style.top.length-2))-15 + 'vh';
 
     //highlight radius
     setHighlight(pos);
@@ -179,31 +191,59 @@ function setHighlight(pos)
     var col;
     var radius;
     var inc;
+    var count = 0;
+    var element;
 
-    for(var i = 0; i < currentTowers.length; i++)
+    if(placedTowerSelected)
     {
-        if(currentTowers[i].position == pos){radius = currentTowers[i].radius;}
-    }
-
-    row = parseInt(pos.substring(1,pos.indexOf('c')))-radius;
-    col = parseInt(pos.substring(pos.indexOf('c')+1))-radius;
-
-    inc = radius;
-    if(radius === 1){inc = 0;}
-    for(i = 0; i < 3+inc; i++) //3 because thats the possible rows around 1 tile
-    {
-        for(var j = 0; j < 3+inc; j++)//same as above but cols
+        for(var i = 0; i < currentTowers.length; i++)
         {
-            element = document.getElementById('r'+(row+i)+'c'+(col+j));
-            if(element !== null && (row+radius !== row+i || col+radius !== col+j) && !inInvalidSpaces(element))
+            if(currentTowers[i].position == pos){radius = currentTowers[i].radius;}
+        }
+
+        row = parseInt(pos.substring(1,pos.indexOf('c')))-radius;
+        col = parseInt(pos.substring(pos.indexOf('c')+1))-radius;
+
+        inc = radius;
+        if(radius === 1){inc = 0;}
+        for(i = 0; i < 3+inc; i++) //3 because thats the possible rows around 1 tile
+        {
+            for(var j = 0; j < 3+inc; j++)//same as above but cols
             {
-                document.getElementById('img'+(row+i)+'-'+(col+j)).src = "res/grassT.png";
-            }
-            else if((row+radius !== row+i || col+radius !== col+j) && inInvalidSpaces(element))
-            {
-                document.getElementById('img'+(row+i)+'-'+(col+j)).src = "res/roadT.png";
+                element = document.getElementById('r'+(row+i)+'c'+(col+j));
+                if(element !== null && (row+radius !== row+i || col+radius !== col+j) && !inInvalidSpaces(element))
+                {
+                    document.getElementById('img'+(row+i)+'-'+(col+j)).src = "res/grassT.png";
+                    currentRadiusTiles.push(element.id);
+                }
+                else if((row+radius !== row+i || col+radius !== col+j) && inInvalidSpaces(element) && !onTowers)
+                {
+                    document.getElementById('img'+(row+i)+'-'+(col+j)).src = "res/roadT.png";
+                    currentRadiusTiles.push(element.id);
+                }
+                onTowers = false;
             }
         }
+    }
+    else if(!placedTowerSelected)
+    {
+        for(i = 0; i < currentRadiusTiles.length; i++)
+        {
+            element = document.getElementById(currentRadiusTiles[i]);
+            row = Number(currentRadiusTiles[i].substring(1, currentRadiusTiles[i].indexOf('c')));
+            col = Number(currentRadiusTiles[i].substring(Number(currentRadiusTiles[i].indexOf('c'))+1));
+
+            if(!inInvalidSpaces(element))
+            {
+                document.getElementById('img'+(row)+'-'+(col)).src = "res/grass.png";
+            }
+            else if(inInvalidSpaces(element))
+            {
+                document.getElementById('img'+(row)+'-'+(col)).src = "res/road.png";
+            }
+            count++;
+        }
+        currentRadiusTiles = [];
     }
 }
 
@@ -332,7 +372,7 @@ function checkTowerSelected(index, element)
         element.onmouseleave = null;
 
         //replace with tower
-        img = document.getElementById(getImgIdFromElementId(prevElem)).src = "res/tower"+index+".png";
+        var img = document.getElementById(getImgIdFromElementId(prevElem)).src = "res/tower"+index+".png";
         invalidSpaces.push(element.id);
 
         //update money
@@ -369,18 +409,17 @@ function select()
 
 function deselect(tower)
 {
+    document.getElementById('towerInfo').style.visibility = 'hidden';
+    placedTowerSelected = false;
+    //remove radius
+    setHighlight(null);
+
     if(tower !== null)
     {
         tower.style.borderColor = curTowerBorder;
         towerSelected = false;
         curTower = null;
     }
-
-    document.getElementById('towerInfo').style.visibility = 'hidden';
-    placedTowerSelected = false;
-
-    //remove radius
-    setHighlight();
 }
 
 

@@ -63,7 +63,7 @@ function start()
     {
         enemy = createHTMLElement('div', 'e'+i, 'enemy', '');
         document.getElementById('board').innerHTML = document.getElementById('board').innerHTML + enemy;
-        enemies.push({health: 100, speed: 1, id: 'e'+i, interval: null});
+        enemies.push({health: 30, speed: 1, id: 'e'+i, money: 25});
     }
 
     positionEnemies();
@@ -78,6 +78,11 @@ function start()
     setTimeout(function(){moveEnemy(enemies[7]);},100);
     setTimeout(function(){moveEnemy(enemies[8]);},100);
     setTimeout(function(){moveEnemy(enemies[9]);},100);
+
+    setTimeout(function(){towerShoot(currentTowers[0])},50);
+    if(currentTowers.length > 0){setTimeout(function(){towerShoot(currentTowers[1])},50);}
+    if(currentTowers.length > 1){setTimeout(function(){towerShoot(currentTowers[2])},50);}
+
 
     for(i = 0; i < enemies.length; i++)//enemies.length; i++)
     {
@@ -109,7 +114,6 @@ function positionEnemies()
 
 function moveEnemy(enemy)
 {
-    var dead = false;
     var index = enemyIndex(enemy);
     var element = document.getElementById(enemy.id);
     var left = Number(element.style.left.substring(0,element.style.left.indexOf('vh')));
@@ -118,18 +122,20 @@ function moveEnemy(enemy)
     if(left >= 73)
     {
         enemy.health = 0;
-        dead = true;
         lives -= 1;
         document.getElementById('health').innerHTML = "Lives: " + lives;
     }
-    if(!dead){setTimeout(function(){moveEnemy(enemy)},100);}
-    if(dead)
+    if(enemy.health > 0){setTimeout(function(){moveEnemy(enemy)},100);}
+    else
     {
+        //add money if player killed enemy
+        if(left < 73){money += enemy.money; document.getElementById('money').innerHTML = "Gold: " + money;}
+
         //removes enemy from game
         element.remove();
         enemies.splice(index, 1);
 
-        if(enemies.length === 0){document.getElementById('start').onclick = start;}
+        if(enemies.length === 0){document.getElementById('start').onclick = start; enemies = []}
         return;
     }
 
@@ -152,26 +158,55 @@ function enemyIndex(enemy)
 
 function towerShoot(tower)
 {
-    if(enemyInTowerRange(tower))
-    {
+    var enemy = enemyInTowerRange(tower);
 
+    if(enemy[0])
+    {
+        //Attack enemy
+        enemy[1].health -= tower.damage;
+        alert(enemy[1].health);
+        //projectile
+        //NYI ^
+
+        //set timeout to the towers attack speed now
+        setTimeout(function(){towerShoot(currentTowers[0])},100*tower.speed);
+    }
+    else
+    {
+        setTimeout(function(){towerShoot(currentTowers[0])},50);
     }
 }
 
 function enemyInTowerRange(tower)
 {
-    for(var i = 0; i < enemies.length; i++)
-    {
-        if(0){}
-    }
-}
+    var leftEdge;
+    var rightEdge;
+    var topEdge;
+    var bottomEdge;
+    var enemyTop;
+    var enemyLeft;
+    var enemyElement;
 
-function checkEnemiesStatus()
-{
+    leftEdge = (Number(tower.position.substring(Number(tower.position.indexOf('c'))+1))-2)*5;
+    rightEdge = (Number(tower.position.substring(Number(tower.position.indexOf('c'))+1))+2)*5;
+    topEdge = (Number(tower.position.substring(1,tower.position.indexOf('c')))-2)*5;
+    bottomEdge = (Number(tower.position.substring(1,tower.position.indexOf('c')))+2)*5;
+
+
     for(var i = 0; i < enemies.length; i++)
     {
-        if(enemies[i].health <= 0){enemies.splice(i);}
+        enemyElement = document.getElementById(enemies[i].id);
+        enemyTop = Number(enemyElement.style.top.substring(0,enemyElement.style.top.indexOf('vh')))+1;
+        enemyLeft = Number(enemyElement.style.left.substring(0,enemyElement.style.left.indexOf('vh')))+1;
+
+        //if in radius of tower
+        if((enemyTop > topEdge && enemyTop < bottomEdge) && (enemyLeft > leftEdge && enemyLeft < rightEdge))
+        {
+            return [true, enemies[i]];
+        }
     }
+
+    return [false, null];
 }
 
 //Board -----------------------------------------------------------------------
@@ -321,8 +356,8 @@ function setHighlight(pos)
 function createTower(t, pos)
 {
     var tower;
-    if(t === 1){tower = {cost:100, upgrade_mult: .6, level: 1, radius : 2, damage: 10, speed: 10, position: pos};}
-    else if(t === 2){tower = {cost:200, upgrade_mult: .6, level: 1, radius : 1, damage: 15, speed: 5, position: pos};}
+    if(t === 1){tower = {cost:100, upgrade_mult: .6, level: 1, radius : 2, damage: 20, speed: 5, position: pos};}
+    else if(t === 2){tower = {cost:200, upgrade_mult: .6, level: 1, radius : 1, damage: 45, speed: 2.5, position: pos};}
     //else if(t === 3){this.cost=100; this.upgrade_mult = .6; this.level = 1; this.radius = 1; this.damage = 10; this.speed = 10; this.position = pos;} //NYI
     //else if(t === 4){this.cost=100; this.upgrade_mult = .6; this.level = 1; this.radius = 1; this.damage = 10; this.speed = 10; this.position = pos;} //NYI
 

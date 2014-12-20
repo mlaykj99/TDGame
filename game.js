@@ -45,6 +45,7 @@ window.onload = function()
 {
     createGameBoard();
     createPath(1);
+
     document.getElementById('tower0').onclick = select;
     document.getElementById('tower1').onclick = select;
     document.getElementById('deselect').onclick = function(){deselect(curTower);};
@@ -62,9 +63,11 @@ function start()
     for(var i = 0; i < 10; i++)
     {
         enemy = createHTMLElement('div', 'e'+i, 'enemy', '');
-        document.getElementById('board').innerHTML = document.getElementById('board').innerHTML + enemy;
+        document.getElementById('board').innerHTML += enemy;
         enemies.push({health: 30, speed: 1, id: 'e'+i, money: 25});
     }
+
+    resetBoardOnclicks();
 
     positionEnemies();
 
@@ -164,7 +167,7 @@ function towerShoot(tower)
     {
         //Attack enemy
         enemy[1].health -= tower.damage;
-        alert(enemy[1].health);
+        //alert(enemy[1].health);
         //projectile
         //NYI ^
 
@@ -261,6 +264,37 @@ function createGameBoard()
         x = 0;
     }
 
+}
+
+function resetBoardOnclicks()
+{
+    var element;
+    var row = 15;
+    var col = 15;
+    var count = 0;
+
+    for(var i = 0; i < row; i++)
+    {
+        for (var j = 0; j < col; j++)
+        {
+            element = document.getElementById('r' + i + 'c' + j);
+            if(currentTowers[count] !== undefined && document.getElementById(currentTowers[count].position) === element)
+            {
+                element.onclick = function(){showTowerInfo(this.id);};
+                count++;
+            }
+            else
+            {
+                element.onclick = function() {if(towerSelected){checkTowerSelected(curTower.id.charAt(5), this);}};
+                element.onmouseenter = function()
+                                        {
+                                            prevElem = this;
+                                            validTile(prevElem);
+                                        };
+                element.onmouseleave = resetColor;
+            }
+        }
+    }
 }
 
 //Towers -----------------------------------------------------------------------

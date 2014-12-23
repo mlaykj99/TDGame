@@ -1,0 +1,221 @@
+*
+{
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+
+body
+{
+    font-size: 2.5vh;
+
+    /*Disable Selection*/
+    -webkit-user-select: none;
+    -moz-user-select: -moz-none;
+    -ms-user-select: none;
+    user-select: none;
+
+    /*Background*/
+    background-image: url("../res/bg.jpg");
+    background-color: #000000;
+    background-repeat: no-repeat;
+    background-size: auto 150%;
+    background-position: center top;
+    background-attachment: fixed;
+}
+
+img
+{
+    height: auto;
+    max-width: 100%;
+}
+
+#container
+{
+    height: 77vh;
+    width: 127vh;
+    margin: 5vh 0 0 25vh;
+}
+
+#page
+{
+    height: 75vh;
+    width: 100vh;
+    border: 1vh solid black;
+    float: left;
+    position: relative;
+}
+
+#towerInfo
+{
+    height: 40vh;
+    width: 25vh;
+    background-color: grey;
+    float: left;
+    visibility: hidden;
+}
+
+/*Tower Info*/
+#upgrade
+{
+    height: 3vh;
+    width: 21vh;
+    float: left;
+    border-bottom: solid;
+    border-right: solid;
+}
+#level
+{
+    height: 3vh;
+    width: 3.3vh;
+    float: left;
+    border-bottom: solid;
+
+}
+#sell
+{
+    height: 3vh;
+    width: 25vh;
+    clear: both;
+    border-bottom: solid;
+}
+#info
+{
+    height: 30vh;
+    width: 25vh;
+    border-bottom: solid;
+}
+
+.text
+{
+    text-align: center;
+}
+
+/*Board Elements*/
+
+#board
+{
+    height: 75vh;
+    width: 75vh;
+    background-color: green;
+    float: left;
+
+    position: absolute;
+    z-index: 1;
+}
+
+.tile
+{
+    height: 5vh;
+    width: 5vh;
+    /*float: left;*/
+    position: absolute;
+}
+
+.clear{clear: both;}
+
+/*Sidebar Elements*/
+
+#sidebar
+{
+    height: 75vh;
+    width: 25vh;
+    background-color: saddlebrown;
+    float: right;
+}
+
+#score
+{
+    height: 12vh;
+    width: 20vh;
+    background-color: #ad5a00;
+    border: .5vh solid #572d00;
+    margin: 3vh auto 0 auto;
+}
+
+#money
+{
+    height: 30%;
+    width: 20vh;
+
+    padding-top: .5vh;
+    color: white;
+    text-align: center;
+}
+
+#health
+{
+    height: 30%;
+    width: 20vh;
+
+    padding-top: .5vh;
+    color: white;
+    text-align: center;
+}
+
+#round
+{
+    height: 30%;
+    width: 20vh;
+
+    padding-top: .5vh;
+    color: white;
+    text-align: center;
+}
+
+#towerContainer
+{
+    height: 40vh;
+    width: 20vh;
+    background-color: #ad5a00;
+    border: .5vh solid #572d00;
+    border-bottom: 0;
+    margin: 2vh auto 0 auto;
+}
+
+#deselectionBox
+{
+    height: 11vh;
+    width: 20vh;
+    background-color: #ad5a00;
+    border: .5vh solid #572d00;
+    border-top: 0;
+    padding-top: 2vh;
+    margin: 0 auto 0 auto;
+}
+
+/*Tower Stuff*/
+
+.towerButton
+{
+    height: 8vh;
+    width: 8vh;
+    margin: .5vh .5vh 1vh .65vh;
+    border: .5vh solid black;
+    background-color: #000000;
+    float: left;
+}
+
+.deselectButton
+{
+    height: 5vh;
+    width: 8vh;
+    background-color: darkred;
+    border: .5vh solid white;
+    margin: .5vh .5vh 1vh .65vh ;
+    float: left;
+
+    padding-top: 3vh;
+    color: white;
+    font-size:1.5vh;
+    text-align: center;
+}
+
+/*Enemy Stuff*/
+.enemy
+{
+    height: 2vh;
+    width: 2vh;
+    background-color: red;
+    position: absolute;
+}

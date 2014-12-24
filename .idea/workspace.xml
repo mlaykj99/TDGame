@@ -2,12 +2,26 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="98f056be-2789-46c6-9698-eefad41f440a" name="Default" comment="">
-      <change type="MOVED" beforePath="C:\Users\Josh\Documents\GitHub\TDGame\game.css" afterPath="$PROJECT_DIR$/css/game.css" />
-      <change type="MOVED" beforePath="C:\Users\Josh\Documents\GitHub\TDGame\game.js" afterPath="$PROJECT_DIR$/js/main.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/b49f63_7f48558002694c418aa8f1fe0127b7f3.png_srz_919_319_85_22_0.50_1.20_0.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/tower2.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/tower3.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/tower4.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/tower5.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/tower6.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/tower7.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/grass.png" afterPath="$PROJECT_DIR$/res/grass.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/grassT.png" afterPath="$PROJECT_DIR$/res/grassT.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/grassX.png" afterPath="$PROJECT_DIR$/res/grassX.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/road.png" afterPath="$PROJECT_DIR$/res/road.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/roadC.png" afterPath="$PROJECT_DIR$/res/roadC.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/roadCT.png" afterPath="$PROJECT_DIR$/res/roadCT.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/roadCX.png" afterPath="$PROJECT_DIR$/res/roadCX.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/roadT.png" afterPath="$PROJECT_DIR$/res/roadT.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/roadX.png" afterPath="$PROJECT_DIR$/res/roadX.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/tower0.png" afterPath="$PROJECT_DIR$/res/tower0.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/tower1.png" afterPath="$PROJECT_DIR$/res/tower1.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/js/main.js" afterPath="$PROJECT_DIR$/js/main.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="TDGame.iws" />
@@ -35,8 +49,8 @@
       <file leaf-file-name="main.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/main.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-2.0363836" vertical-offset="12268" max-vertical-offset="13175">
-              <caret line="613" column="9" selection-start-line="613" selection-start-column="9" selection-end-line="613" selection-end-column="9" />
+            <state vertical-scroll-proportion="0.5203969" vertical-offset="2503" max-vertical-offset="14008">
+              <caret line="175" column="102" selection-start-line="175" selection-start-column="102" selection-end-line="175" selection-end-column="102" />
               <folding />
             </state>
           </provider>
@@ -45,7 +59,7 @@
       <file leaf-file-name="game.css" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/css/game.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="2091" max-vertical-offset="3842">
+            <state vertical-scroll-proportion="0.0" vertical-offset="1596" max-vertical-offset="3842">
               <caret line="157" column="16" selection-start-line="157" selection-start-column="16" selection-end-line="157" selection-end-column="16" />
               <folding />
             </state>
@@ -55,8 +69,8 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-15.038462" vertical-offset="0" max-vertical-offset="748">
-              <caret line="23" column="43" selection-start-line="23" selection-start-column="43" selection-end-line="23" selection-end-column="43" />
+            <state vertical-scroll-proportion="-1.3076923" vertical-offset="0" max-vertical-offset="850">
+              <caret line="2" column="16" selection-start-line="2" selection-start-column="16" selection-end-line="2" selection-end-column="16" />
               <folding />
             </state>
           </provider>
@@ -65,6 +79,7 @@
     </leaf>
   </component>
   <component name="Git.Settings">
+    <option name="ROOT_SYNC" value="DONT_SYNC" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="IdeDocumentHistory">
@@ -149,6 +164,20 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="TDGame" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="TDGame" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
     </panes>
@@ -156,9 +185,9 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="HbShouldOpenHtmlAsHb" value="" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$USER_HOME$/AppData/Local/GitHub/PortableGit_c2ba306e536fdf878271f7fe636a147ff37326ad/bin/git.exe" />
     <property name="full.screen.before.presentation.mode" value="false" />
-    <property name="options.lastSelected" value="preferences.keymap" />
+    <property name="options.lastSelected" value="vcs.Git" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="FullScreen" value="false" />
@@ -580,14 +609,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-15.038462" vertical-offset="0" max-vertical-offset="748">
-          <caret line="23" column="43" selection-start-line="23" selection-start-column="43" selection-end-line="23" selection-end-column="43" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/css/game.css">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="2091" max-vertical-offset="3842">
@@ -596,10 +617,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.3076923" vertical-offset="0" max-vertical-offset="850">
+          <caret line="2" column="16" selection-start-line="2" selection-start-column="16" selection-end-line="2" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/js/main.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-2.0363836" vertical-offset="12268" max-vertical-offset="13175">
-          <caret line="613" column="9" selection-start-line="613" selection-start-column="9" selection-end-line="613" selection-end-column="9" />
+        <state vertical-scroll-proportion="0.5203969" vertical-offset="2503" max-vertical-offset="14008">
+          <caret line="175" column="102" selection-start-line="175" selection-start-column="102" selection-end-line="175" selection-end-column="102" />
           <folding />
         </state>
       </provider>

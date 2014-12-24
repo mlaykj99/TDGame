@@ -29,9 +29,13 @@ var corners = [];
 var towerOptions =
 [
     createTower(1,null),
-    createTower(2,null)//,
-    //tower2 = createTower(3,null),
-    //tower3 = createTower(4,null)
+    createTower(2,null),
+    createTower(3,null),
+    createTower(4,null),
+    createTower(5,null),
+    createTower(6,null),
+    createTower(7,null),
+    createTower(8,null)
 ];
 
 //Temporary enemies for testing
@@ -49,8 +53,12 @@ window.onload = function()
     //createPath(1);
     createPath(2);
 
-    document.getElementById('tower0').onclick = select;
-    document.getElementById('tower1').onclick = select;
+    //set tower selection
+    for(var i = 0; i < towerOptions.length; i++)
+    {
+        document.getElementById('tower'+i).onclick = select;
+    }
+
     document.getElementById('deselect').onclick = function(){deselect(curTower);};
 
     document.getElementById('start').onclick = start;
@@ -74,16 +82,16 @@ function start()
 
     positionEnemies();
 
-    setTimeout(function(){moveEnemy(enemies[0]);},100);
-    setTimeout(function(){moveEnemy(enemies[1]);},100);
-    setTimeout(function(){moveEnemy(enemies[2]);},100);
-    setTimeout(function(){moveEnemy(enemies[3]);},100);
-    setTimeout(function(){moveEnemy(enemies[4]);},100);
-    setTimeout(function(){moveEnemy(enemies[5]);},100);
-    setTimeout(function(){moveEnemy(enemies[6]);},100);
-    setTimeout(function(){moveEnemy(enemies[7]);},100);
-    setTimeout(function(){moveEnemy(enemies[8]);},100);
-    setTimeout(function(){moveEnemy(enemies[9]);},100);
+    setTimeout(function(){moveEnemy(enemies[0], false);},100);
+    setTimeout(function(){moveEnemy(enemies[1], false);},100);
+    setTimeout(function(){moveEnemy(enemies[2], false);},100);
+    setTimeout(function(){moveEnemy(enemies[3], false);},100);
+    setTimeout(function(){moveEnemy(enemies[4], false);},100);
+    setTimeout(function(){moveEnemy(enemies[5], false);},100);
+    setTimeout(function(){moveEnemy(enemies[6], false);},100);
+    setTimeout(function(){moveEnemy(enemies[7], false);},100);
+    setTimeout(function(){moveEnemy(enemies[8], false);},100);
+    setTimeout(function(){moveEnemy(enemies[9], false);},100);
 
     //up to 10 towers for now
     setTimeout(function(){towerShoot(currentTowers[0])},50);
@@ -95,7 +103,6 @@ function start()
     if(currentTowers.length > 5){setTimeout(function(){towerShoot(currentTowers[6])},50);}
     if(currentTowers.length > 6){setTimeout(function(){towerShoot(currentTowers[7])},50);}
     if(currentTowers.length > 7){setTimeout(function(){towerShoot(currentTowers[8])},50);}
-    if(currentTowers.length > 8){setTimeout(function(){towerShoot(currentTowers[9])},50);}
 
     for(i = 0; i < enemies.length; i++)//enemies.length; i++)
     {
@@ -125,11 +132,14 @@ function positionEnemies()
     }
 }
 
-function moveEnemy(enemy)
+function moveEnemy(enemy, up)
 {
     var index = enemyIndex(enemy);
     var element = document.getElementById(enemy.id);
     var left = Number(element.style.left.substring(0,element.style.left.indexOf('vh')));
+    var top = Number(element.style.top.substring(0,element.style.top.indexOf('vh')));
+
+    up = inInvalidSpaces('r'+(Math.floor(left/5)+1)+'c'+Math.floor(top/5));
 
     if(left === 0){element.style.visibility = 'visible';}
     if(left >= 73)
@@ -138,7 +148,7 @@ function moveEnemy(enemy)
         lives -= 1;
         document.getElementById('health').innerHTML = "Lives: " + lives;
     }
-    if(enemy.health > 0){setTimeout(function(){moveEnemy(enemy)},100);}
+    if(enemy.health > 0){setTimeout(function(){moveEnemy(enemy, up)},100);}
     else
     {
         //add money if player killed enemy
@@ -150,7 +160,7 @@ function moveEnemy(enemy)
 
         if(enemies.length === 0)
         {
-            document.getElementById('start').onclick = start;
+            if(round <= 5){document.getElementById('start').onclick = start;}
             enemies = [];
 
             //update rounds
@@ -161,6 +171,14 @@ function moveEnemy(enemy)
     }
 
     //move enemy
+    alert('r'+(Math.floor(left/5)+1)+'c'+Math.floor(top/5));
+    if(inInvalidSpaces(document.getElementById('r'+(Math.floor(left/5)+1)+'c'+Math.floor(top/5)))
+        || inInvalidSpaces(document.getElementById('r'+(Math.floor(left/5)-1)+'c'+Math.floor(top/5))))
+    {
+        element.style.left = left-1+'vh';
+        if(up){element.style.top = top+1+'vh';}
+        else{element.style.top = top-1+'vh';}
+    }
     element.style.left = left+1+'vh';
 }
 
@@ -320,6 +338,7 @@ function showTowerInfo(pos)
 {
     var element = document.getElementById('towerInfo');
     var tower;
+    var upgradeCost;
 
     //get the tower reference
     for(var i = 0; i < currentTowers.length; i++)
@@ -332,11 +351,13 @@ function showTowerInfo(pos)
     placedTowerSelected = true;
 
     //set tower info in div
+    upgradeCost = (tower.cost*tower.upgrade_mult*(tower.level/2));
     $('#info').html(
         "<P>DMG: " + tower.damage + "</p>" +
         "<P>SPEED: " + tower.speed + "</p>" +
         "<P>RANGE: " + tower.radius + "</p>" +
-        "<P>COST: " + tower.cost + "</p>"
+        "<P>COST: " + tower.cost + "</p>" +
+        "<P>UPGRADE: " + upgradeCost + "</p>"
     );
 
     element.style.visibility = 'visible';
@@ -352,12 +373,31 @@ function showTowerInfo(pos)
 
 }
 
+function showTowerInfo2(tower)
+{
+    var element = document.getElementById('towerInfo');
+    var upgradeCost;
+
+    //set tower info in div
+    upgradeCost = (tower.cost*tower.upgrade_mult*(tower.level/2));
+    $('#info').html(
+        "<P>DMG: " + tower.damage + "</p>" +
+        "<P>SPEED: " + tower.speed + "</p>" +
+        "<P>RANGE: " + tower.radius + "</p>" +
+        "<P>COST: " + tower.cost + "</p>" +
+        "<P>UPGRADE: " + upgradeCost + "</p>"
+    );
+
+    element.style.visibility = 'visible';
+}
+
 function upgrade(tower)
 {
-    if(money >= (tower.cost*tower.upgrade_mult*(tower.level/2)))
+    var upgradeCost = (tower.cost*tower.upgrade_mult*(tower.level/2));
+    if(money >= upgradeCost)
     {
         //set money
-        money -= tower.cost*tower.upgrade_mult*(tower.level/2);
+        money -= upgradeCost;
         $('#money').html("Gold: " + money);
 
         //set Tower level
@@ -365,13 +405,15 @@ function upgrade(tower)
         $('#level').html(""+tower.level);
 
         //update tower stats
+        upgradeCost = (tower.cost*tower.upgrade_mult*(tower.level/2));
         tower.damage += (tower.damage*tower.upgrade_mult);
         tower.speed -= tower.upgrade_mult/2;
         $('#info').html(
             "<P>DMG: " + tower.damage + "</p>" +
             "<P>SPEED: " + tower.speed + "</p>" +
             "<P>RANGE: " + tower.radius + "</p>" +
-            "<P>COST: " + tower.cost + "</p>"
+            "<P>COST: " + tower.cost + "</p>" +
+            "<P>UPGRADE: " + upgradeCost + "</p>"
         );
     }
 }
@@ -445,7 +487,8 @@ function setHighlight(pos)
                 }
                 else if((row+radius !== row+i || col+radius !== col+j) && inInvalidSpaces(element) && !onTowers)
                 {
-                    document.getElementById('img'+(row+i)+'-'+(col+j)).src = "res/roadT.png";
+                    if(inCorners(element)){document.getElementById('img'+(row+i)+'-'+(col+j)).src = "res/roadCT.png"}
+                    else{document.getElementById('img'+(row+i)+'-'+(col+j)).src = "res/roadT.png";}
                     currentRadiusTiles.push(element.id);
                 }
                 onTowers = false;
@@ -466,7 +509,8 @@ function setHighlight(pos)
             }
             else if(inInvalidSpaces(element))
             {
-                document.getElementById('img'+(row)+'-'+(col)).src = "res/road.png";
+                if(inCorners(element)){document.getElementById('img'+(row)+'-'+(col)).src = "res/roadC.png";}
+                else{document.getElementById('img'+(row)+'-'+(col)).src = "res/road.png";}
             }
             count++;
         }
@@ -479,8 +523,12 @@ function createTower(t, pos)
     var tower;
     if(t === 1){tower = {cost:100, upgrade_mult: .6, level: 1, radius : 2, damage: 20, speed: 5, position: pos};}
     else if(t === 2){tower = {cost:200, upgrade_mult: .6, level: 1, radius : 1, damage: 30, speed: 3, position: pos};}
-    //else if(t === 3){this.cost=100; this.upgrade_mult = .6; this.level = 1; this.radius = 1; this.damage = 10; this.speed = 10; this.position = pos;} //NYI
-    //else if(t === 4){this.cost=100; this.upgrade_mult = .6; this.level = 1; this.radius = 1; this.damage = 10; this.speed = 10; this.position = pos;} //NYI
+    else if(t === 3){tower = {cost:0, upgrade_mult: .6, level: 1, radius : 1, damage: 30, speed: 3, position: pos};}
+    else if(t === 4){tower = {cost:0, upgrade_mult: .6, level: 1, radius : 1, damage: 30, speed: 3, position: pos};}
+    else if(t === 5){tower = {cost:0, upgrade_mult: .6, level: 1, radius : 1, damage: 30, speed: 3, position: pos};}
+    else if(t === 6){tower = {cost:0, upgrade_mult: .6, level: 1, radius : 1, damage: 30, speed: 3, position: pos};}
+    else if(t === 7){tower = {cost:0, upgrade_mult: .6, level: 1, radius : 1, damage: 30, speed: 3, position: pos};}
+    else if(t === 8){tower = {cost:0, upgrade_mult: .6, level: 1, radius : 1, damage: 30, speed: 3, position: pos};}
 
     return tower;
 }
@@ -634,7 +682,7 @@ function inCorners(element)
 {
     for(var i = 0; i < corners.length; i++)
     {
-        if(element.id == corners[i]){return true;}
+        if(element.id == corners[i][0]){return true;}
     }
     return false;
 }
@@ -665,7 +713,7 @@ function validTile(element)
     }
     else if(towerSelected)
     {
-        if(inCorners()){document.getElementById(id).src = "res/roadCX.png";}
+        if(inCorners(element)){document.getElementById(id).src = "res/roadCX.png";}
         else{document.getElementById(id).src = "res/roadX.png";}
     }
     return false;
@@ -711,7 +759,7 @@ function resetColor()
     if(!inInvalidSpaces(prevElem) && !placedTowerSelected){ document.getElementById(id).src = "res/grass.png";}
     else if(!placedTowerSelected)
     {
-        if(inCorners()){document.getElementById(id).src = "res/roadC.png";}
+        if(inCorners(prevElem)){document.getElementById(id).src = "res/roadC.png";}
         else{document.getElementById(id).src = "res/road.png";}
     }
 }
@@ -724,6 +772,7 @@ function select()
     curTowerBorder = curTower.style.backgroundColor;
     curTower.style.borderColor = 'white';
     towerSelected = true;
+    showTowerInfo2(curTower);
 }
 
 function deselect(tower)

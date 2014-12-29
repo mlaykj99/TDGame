@@ -216,6 +216,6 @@ img
 {
     height: 2vh;
     width: 2vh;
-    background-color: red;
+    /*background-color: red;*/
     position: absolute;
 }

@@ -13,6 +13,7 @@ var round = 1;
 
 var currentRadiusTiles = [];
 var corners = [];
+var rounds = 3;
 
 /*
 * Tower Description
@@ -69,13 +70,22 @@ window.onload = function()
 function start()
 {
     var enemy;
+    var img;
 
     document.getElementById('start').onclick = null;
     for(var i = 0; i < 10 /* +(round*3)*/; i++)  //Add 3 every round when moveEnemy is fixed
     {
         enemy = createHTMLElement('div', 'e'+i, 'enemy', '');
         document.getElementById('board').innerHTML += enemy;
-        enemies.push({health: 30, speed: 1, id: 'e'+i, money: 25});
+        enemies.push({health: 30, speed: 1, id: 'e'+i, money: 25, dir:0, nxtCorner: 0}); //dir - 0: left 1: right 2: up 3: down
+    }
+
+    //set image
+    for(i = 0; i < 10 /* +(round*3)*/; i++)
+    {
+        img = document.createElement('IMG');
+        img.src = 'res/enemy.png';
+        document.getElementById('e'+i).appendChild(img);
     }
 
     resetBoardOnclicks();
@@ -113,6 +123,13 @@ function start()
     {
         //setInterval(function(){towerShoot(currentTowers[i])},10*currentTowers[i].speed);
     }
+
+    if(round >= rounds)
+    {
+        rounds = rounds + 1;
+        round = 1;
+        document.getElementById('round').innerHTML = 'Round: ' + round + " of " + rounds;
+    }
 }
 
 function positionEnemies()
@@ -139,7 +156,9 @@ function moveEnemy(enemy, up)
     var left = Number(element.style.left.substring(0,element.style.left.indexOf('vh')));
     var top = Number(element.style.top.substring(0,element.style.top.indexOf('vh')));
 
-    up = inInvalidSpaces('r'+(Math.floor(left/5)+1)+'c'+Math.floor(top/5));
+
+    //up = inInvalidSpaces('r'+(Math.floor(left/5))+'c'+Math.floor((top/5)+1));
+
 
     if(left === 0){element.style.visibility = 'visible';}
     if(left >= 73)
@@ -165,22 +184,30 @@ function moveEnemy(enemy, up)
 
             //update rounds
             round++;
-            document.getElementById('round').innerHTML = 'Round: ' + round + " of 5";
+            document.getElementById('round').innerHTML = 'Round: ' + round + " of " + rounds;
         }
         return;
     }
 
     //move enemy
-    alert('r'+(Math.floor(left/5)+1)+'c'+Math.floor(top/5));
-    if(inInvalidSpaces(document.getElementById('r'+(Math.floor(left/5)+1)+'c'+Math.floor(top/5)))
-        || inInvalidSpaces(document.getElementById('r'+(Math.floor(left/5)-1)+'c'+Math.floor(top/5))))
+    if(corners[enemy.nxtCorner][1] === Math.floor(top/5) && corners[enemy.nxtCorner][2] === Math.floor(left/5))//at corner
     {
-        element.style.left = left-1+'vh';
-        if(up){element.style.top = top+1+'vh';}
-        else{element.style.top = top-1+'vh';}
+        //change direction
+        if(corners[enemy.nxtCorner][2] < corners[enemy.nxtCorner][4]){enemy.dir = 0; }          //left
+        else if(corners[enemy.nxtCorner][2] > corners[enemy.nxtCorner][4]){enemy.dir = 1; }     //right
+        else if(corners[enemy.nxtCorner][1] > corners[enemy.nxtCorner][3]){enemy.dir = 2; }     //up
+        else if(corners[enemy.nxtCorner][1] < corners[enemy.nxtCorner][3]){enemy.dir = 3; }     //down
+        enemy.nxtCorner++;
     }
-    element.style.left = left+1+'vh';
+
+    if(enemy.dir === 0){element.style.left = left+1+'vh';}
+    else if(enemy.dir === 1){element.style.left = left-1+'vh';}
+    else if(enemy.dir === 2){element.style.top = top-1+'vh';}
+    else if(enemy.dir === 3){element.style.top = top+1+'vh';}
+
+
 }
+
 
 function enemyIndex(enemy)
 {
@@ -633,6 +660,15 @@ function replaceCorners(path)
         if(nxtRow !== Number(path[i].substring(1,path[i].indexOf('c')))){vert.push(path[i+1]);}
     }
 
+    //add last corner for enemy pathing
+    corners.push([
+        null,
+        Number(path[i].substring(1,path[i].indexOf('c')))+1,            //corner row
+        Number(path[i].substring(Number(path[i].indexOf('c'))+1))+1,    //corner col
+        Number(path[0].substring(1,path[0].indexOf('c'))),              //next row
+        Number(path[0].substring(Number(path[0].indexOf('c'))+1))       //next col
+    ]);
+
     rotate(vert);
 }
 
@@ -647,7 +683,7 @@ function rotate(vert)
         img.style.transform = "rotate(90deg)";
     }
 
-    for(var i = 0; i < corners.length; i++)
+    for(var i = 0; i < corners.length-1; i++)
     {
         img = document.getElementById(getImgIdFromElementId(document.getElementById(corners[i][0])));
 
@@ -670,10 +706,14 @@ function rotate(vert)
 
 function inInvalidSpaces(element)
 {
-    for(var i = 0; i < invalidSpaces.length; i++)
+    if(element === null || element === undefined){/*alert("Element: " + element);*/}
+    else
     {
-        if(element.id == invalidSpaces[i]){return true;}
-        if("-" == invalidSpaces[i]){onTowers = true;}
+        for(var i = 0; i < invalidSpaces.length; i++)
+        {
+            if(element.id == invalidSpaces[i]){return true;}
+            if("-" == invalidSpaces[i]){onTowers = true;}
+        }
     }
     return false;
 }

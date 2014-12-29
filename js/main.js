@@ -378,6 +378,7 @@ function showTowerInfo(pos)
     placedTowerSelected = true;
 
     //set tower info in div
+    $('#level').html(""+tower.level);
     upgradeCost = (tower.cost*tower.upgrade_mult*(tower.level/2));
     $('#info').html(
         "<P>DMG: " + tower.damage + "</p>" +
@@ -406,6 +407,7 @@ function showTowerInfo2(tower)
     var upgradeCost;
 
     //set tower info in div
+    $('#level').html(""+tower.level);
     upgradeCost = (tower.cost*tower.upgrade_mult*(tower.level/2));
     $('#info').html(
         "<P>DMG: " + tower.damage + "</p>" +
@@ -421,7 +423,7 @@ function showTowerInfo2(tower)
 function upgrade(tower)
 {
     var upgradeCost = (tower.cost*tower.upgrade_mult*(tower.level/2));
-    if(money >= upgradeCost)
+    if(tower.level < tower.maxUpgrade && money >= upgradeCost)
     {
         //set money
         money -= upgradeCost;
@@ -545,17 +547,80 @@ function setHighlight(pos)
     }
 }
 
+function setHighlight2(pos, tower)
+{
+    var row;
+    var col;
+    var radius;
+    var inc;
+    var count = 0;
+    var element;
+
+    //if(curTower !== null){alert(curTower.radius);radius = curTower.radius;}
+
+    if(pos !== null && tower !== undefined)
+    {
+        radius = tower.radius;
+
+        row = parseInt(pos.substring(1,pos.indexOf('c')))-radius;
+        col = parseInt(pos.substring(pos.indexOf('c')+1))-radius;
+
+        inc = radius;
+        if(radius === 1){inc = 0;}
+        for(i = 0; i < 3+inc; i++) //3 because thats the possible rows around 1 tile
+        {
+            for(var j = 0; j < 3+inc; j++)//same as above but cols
+            {
+                element = document.getElementById('r'+(row+i)+'c'+(col+j));
+                if(element !== null && (row+radius !== row+i || col+radius !== col+j) && !inInvalidSpaces(element))
+                {
+                    document.getElementById('img'+(row+i)+'-'+(col+j)).src = "res/grassT.png";
+                    currentRadiusTiles.push(element.id);
+                }
+                else if((row+radius !== row+i || col+radius !== col+j) && inInvalidSpaces(element) && !onTowers)
+                {
+                    if(inCorners(element)){document.getElementById('img'+(row+i)+'-'+(col+j)).src = "res/roadCT.png"}
+                    else{document.getElementById('img'+(row+i)+'-'+(col+j)).src = "res/roadT.png";}
+                    currentRadiusTiles.push(element.id);
+                }
+                onTowers = false;
+            }
+        }
+    }
+    else if(pos === null)
+    {
+        for(i = 0; i < currentRadiusTiles.length; i++)
+        {
+            element = document.getElementById(currentRadiusTiles[i]);
+            row = Number(currentRadiusTiles[i].substring(1, currentRadiusTiles[i].indexOf('c')));
+            col = Number(currentRadiusTiles[i].substring(Number(currentRadiusTiles[i].indexOf('c'))+1));
+
+            if(!inInvalidSpaces(element))
+            {
+                document.getElementById('img'+(row)+'-'+(col)).src = "res/grass.png";
+            }
+            else if(inInvalidSpaces(element))
+            {
+                if(inCorners(element)){document.getElementById('img'+(row)+'-'+(col)).src = "res/roadC.png";}
+                else{document.getElementById('img'+(row)+'-'+(col)).src = "res/road.png";}
+            }
+            count++;
+        }
+        currentRadiusTiles = [];
+    }
+}
+
 function createTower(t, pos)
 {
     var tower;
-    if(t === 1){tower = {cost:100, upgrade_mult: .6, level: 1, radius : 2, damage: 20, speed: 5, position: pos};}
-    else if(t === 2){tower = {cost:200, upgrade_mult: .6, level: 1, radius : 1, damage: 30, speed: 3, position: pos};}
-    else if(t === 3){tower = {cost:0, upgrade_mult: .6, level: 1, radius : 1, damage: 30, speed: 3, position: pos};}
-    else if(t === 4){tower = {cost:0, upgrade_mult: .6, level: 1, radius : 1, damage: 30, speed: 3, position: pos};}
-    else if(t === 5){tower = {cost:0, upgrade_mult: .6, level: 1, radius : 1, damage: 30, speed: 3, position: pos};}
-    else if(t === 6){tower = {cost:0, upgrade_mult: .6, level: 1, radius : 1, damage: 30, speed: 3, position: pos};}
-    else if(t === 7){tower = {cost:0, upgrade_mult: .6, level: 1, radius : 1, damage: 30, speed: 3, position: pos};}
-    else if(t === 8){tower = {cost:0, upgrade_mult: .6, level: 1, radius : 1, damage: 30, speed: 3, position: pos};}
+    if(t === 1){tower = {cost:100, upgrade_mult: .6, level: 1, radius : 2, damage: 20, speed: 5, position: pos, maxUpgrade: 6};}
+    else if(t === 2){tower = {cost:200, upgrade_mult: .6, level: 1, radius : 1, damage: 30, speed: 3, position: pos, maxUpgrade: 5};}
+    else if(t === 3){tower = {cost:150, upgrade_mult: .6, level: 1, radius : 1, damage: 15, speed: 1.5, position: pos, maxUpgrade: 6};}
+    else if(t === 4){tower = {cost:300, upgrade_mult: .6, level: 1, radius : 2, damage: 35, speed: 3, position: pos, maxUpgrade: 4};}
+    else if(t === 5){tower = {cost:100, upgrade_mult: .6, level: 1, radius : 2, damage: 20, speed: 5, position: pos, maxUpgrade: 6};}
+    else if(t === 6){tower = {cost:200, upgrade_mult: .6, level: 1, radius : 1, damage: 30, speed: 3, position: pos, maxUpgrade: 5};}
+    else if(t === 7){tower = {cost:150, upgrade_mult: .6, level: 1, radius : 1, damage: 15, speed: 1.5, position: pos, maxUpgrade: 6};}
+    else if(t === 8){tower = {cost:300, upgrade_mult: .6, level: 1, radius : 2, damage: 35, speed: 3, position: pos, maxUpgrade: 4};}
 
     return tower;
 }
@@ -738,11 +803,12 @@ function getImgIdFromElementId(element)
 
 function validTile(element)
 {
+    var tower;
     var id = getImgIdFromElementId(element);
 
-    /*//set radius of tile
-    placedTowerSelected = true;
-    setHighlight(element.id);*/
+    //set radius of tile
+    if(curTower !== null){tower = towerOptions[Number(curTower.id.substring(5))];}
+    setHighlight2(element.id, tower);
 
 
     //if its not road or has tower on it and a tower is selected return true
@@ -790,11 +856,12 @@ function checkTowerSelected(index, element)
 
 function resetColor()
 {
+    var tower;
     var id = getImgIdFromElementId(prevElem);
 
-    /*//remove any radii
-    placedTowerSelected = false;
-    setHighlight(prevElem.id);*/
+    //remove any radii
+    if(curTower !== null){tower = towerOptions[Number(curTower.id.substring(5))];}
+    setHighlight2(null, tower);
 
     if(!inInvalidSpaces(prevElem) && !placedTowerSelected){ document.getElementById(id).src = "res/grass.png";}
     else if(!placedTowerSelected)
@@ -807,12 +874,14 @@ function resetColor()
 //Selection and Deselection ---------------------------------------------------------
 function select()
 {
+    var tower;
     deselect(curTower);
     curTower = this;
     curTowerBorder = curTower.style.backgroundColor;
     curTower.style.borderColor = 'white';
     towerSelected = true;
-    showTowerInfo2(curTower);
+    tower = towerOptions[Number(curTower.id.substring(5))];
+    showTowerInfo2(tower);
 }
 
 function deselect(tower)

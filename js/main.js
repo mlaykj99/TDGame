@@ -7,11 +7,12 @@ var curTower = null;
 var curTowerBorder = '#000000';
 var onTowers = false;
 
-var money = 300;
+var money = 100;
 var lives = 15;
 var round = 1;
 
 var currentRadiusTiles = [];
+var currentRadiusTiles2 = [];
 var corners = [];
 var rounds = 3;
 
@@ -71,20 +72,23 @@ function start()
 {
     var enemy;
     var img;
+    var health;
 
     document.getElementById('start').onclick = null;
-    for(var i = 0; i < 10 /* +(round*3)*/; i++)  //Add 3 every round when moveEnemy is fixed
+    for(var i = 0; i < 5 +(round*2); i++)  //Add 2 every round
     {
         enemy = createHTMLElement('div', 'e'+i, 'enemy', '');
         document.getElementById('board').innerHTML += enemy;
-        enemies.push({health: 30, speed: 1, id: 'e'+i, money: 25, dir:0, nxtCorner: 0}); //dir - 0: left 1: right 2: up 3: down
+        health = 30+(round*10);
+        enemies.push({health: health, speed: 1, id: 'e'+i, money: 10, dir:0, nxtCorner: 0}); //dir - 0: left 1: right 2: up 3: down
     }
 
     //set image
-    for(i = 0; i < 10 /* +(round*3)*/; i++)
+    for(i = 0; i < 5 +(round*2); i++)
     {
         img = document.createElement('IMG');
         img.src = 'res/enemy.png';
+        img.id = 'ie'+i;
         document.getElementById('e'+i).appendChild(img);
     }
 
@@ -92,19 +96,7 @@ function start()
 
     positionEnemies();
 
-    setTimeout(function(){moveEnemy(enemies[0], false);},100);
-    setTimeout(function(){moveEnemy(enemies[1], false);},100);
-    setTimeout(function(){moveEnemy(enemies[2], false);},100);
-    setTimeout(function(){moveEnemy(enemies[3], false);},100);
-    setTimeout(function(){moveEnemy(enemies[4], false);},100);
-    setTimeout(function(){moveEnemy(enemies[5], false);},100);
-    setTimeout(function(){moveEnemy(enemies[6], false);},100);
-    setTimeout(function(){moveEnemy(enemies[7], false);},100);
-    setTimeout(function(){moveEnemy(enemies[8], false);},100);
-    setTimeout(function(){moveEnemy(enemies[9], false);},100);
-
-    //up to 10 towers for now
-    setTimeout(function(){towerShoot(currentTowers[0])},50);
+    /*setTimeout(function(){towerShoot(currentTowers[0])},50);
     if(currentTowers.length > 0){setTimeout(function(){towerShoot(currentTowers[1])},50);}
     if(currentTowers.length > 1){setTimeout(function(){towerShoot(currentTowers[2])},50);}
     if(currentTowers.length > 2){setTimeout(function(){towerShoot(currentTowers[3])},50);}
@@ -112,23 +104,28 @@ function start()
     if(currentTowers.length > 4){setTimeout(function(){towerShoot(currentTowers[5])},50);}
     if(currentTowers.length > 5){setTimeout(function(){towerShoot(currentTowers[6])},50);}
     if(currentTowers.length > 6){setTimeout(function(){towerShoot(currentTowers[7])},50);}
-    if(currentTowers.length > 7){setTimeout(function(){towerShoot(currentTowers[8])},50);}
+    if(currentTowers.length > 7){setTimeout(function(){towerShoot(currentTowers[8])},50);}*/
 
     for(i = 0; i < enemies.length; i++)//enemies.length; i++)
     {
-        //setTimeout(function(){moveEnemy(enemies[i]);},100);
+        moveEnemy(enemies[i]);
     }
 
-    for(i = 0; i < currentTowers.length; i++)
-    {
-        //setInterval(function(){towerShoot(currentTowers[i])},10*currentTowers[i].speed);
-    }
+    setTowers();
+}
 
-    if(round >= rounds)
+function setTowers()
+{
+    if(document.getElementById('start').onclick === null)
     {
-        rounds = rounds + 1;
-        round = 1;
-        document.getElementById('round').innerHTML = 'Round: ' + round + " of " + rounds;
+        towerShoot(currentTowers[currentTowers.length-1]);
+    }
+    else
+    {
+        for(var i = 0; i < currentTowers.length; i++)
+        {
+            towerShoot(currentTowers[i]);
+        }
     }
 }
 
@@ -149,16 +146,12 @@ function positionEnemies()
     }
 }
 
-function moveEnemy(enemy, up)
+function moveEnemy(enemy)
 {
     var index = enemyIndex(enemy);
     var element = document.getElementById(enemy.id);
     var left = Number(element.style.left.substring(0,element.style.left.indexOf('vh')));
     var top = Number(element.style.top.substring(0,element.style.top.indexOf('vh')));
-
-
-    //up = inInvalidSpaces('r'+(Math.floor(left/5))+'c'+Math.floor((top/5)+1));
-
 
     if(left === 0){element.style.visibility = 'visible';}
     if(left >= 73)
@@ -166,8 +159,9 @@ function moveEnemy(enemy, up)
         enemy.health = 0;
         lives -= 1;
         document.getElementById('health').innerHTML = "Lives: " + lives;
+        if(lives < 1){endGame();}
     }
-    if(enemy.health > 0){setTimeout(function(){moveEnemy(enemy, up)},100);}
+    if(enemy.health > 0){setTimeout(function(){moveEnemy(enemy)},100);}
     else
     {
         //add money if player killed enemy
@@ -186,20 +180,44 @@ function moveEnemy(enemy, up)
             round++;
             document.getElementById('round').innerHTML = 'Round: ' + round + " of " + rounds;
         }
+
+        if(round > rounds)
+        {
+            rounds = rounds + 1;
+            round = 1;
+            document.getElementById('round').innerHTML = 'Round: ' + round + " of " + rounds;
+        }
         return;
     }
-
     //move enemy
-    if(corners[enemy.nxtCorner][1] === Math.floor(top/5) && corners[enemy.nxtCorner][2] === Math.floor(left/5))//at corner
+    var corrow = corners[enemy.nxtCorner][1]*5;
+    var corcol = corners[enemy.nxtCorner][2]*5;
+    var img = document.getElementById('i'+enemy.id);
+
+    //movement adjustments
+    if(enemy.dir === 0){corrow+=1;}
+    if(enemy.dir === 1){corrow+=1;}
+    if(enemy.dir === 2){corcol+=1;corrow+=2;}
+    if(enemy.dir === 3){corcol+=1;}
+
+    //if(enemy.id == 'e0')alert(enemy.dir +" | "+corrow + " | " + Math.floor(top) + " | " + corcol + " | " + left);
+    if(corrow === Math.floor(top) && corcol === left)//at corner (adjusted)
     {
+        //adjustment to turn timing
+        if(enemy.dir === 0){element.style.left = left+1+'vh';}
+        else if(enemy.dir === 1){element.style.left = left-1+'vh';}
+        else if(enemy.dir === 2){element.style.top = top-1+'vh';}
+        else if(enemy.dir === 3){element.style.top = top+1+'vh';}
+
         //change direction
-        if(corners[enemy.nxtCorner][2] < corners[enemy.nxtCorner][4]){enemy.dir = 0; }          //left
-        else if(corners[enemy.nxtCorner][2] > corners[enemy.nxtCorner][4]){enemy.dir = 1; }     //right
-        else if(corners[enemy.nxtCorner][1] > corners[enemy.nxtCorner][3]){enemy.dir = 2; }     //up
-        else if(corners[enemy.nxtCorner][1] < corners[enemy.nxtCorner][3]){enemy.dir = 3; }     //down
+        if(corners[enemy.nxtCorner][2] < corners[enemy.nxtCorner][4]){enemy.dir = 0; img.style.transform = "rotate(0deg)";}             //left
+        else if(corners[enemy.nxtCorner][2] > corners[enemy.nxtCorner][4]){enemy.dir = 1; img.style.transform = "rotate(180deg)";}      //right
+        else if(corners[enemy.nxtCorner][1] > corners[enemy.nxtCorner][3]){enemy.dir = 2; img.style.transform = "rotate(270deg)";}      //up
+        else if(corners[enemy.nxtCorner][1] < corners[enemy.nxtCorner][3]){enemy.dir = 3; img.style.transform = "rotate(90deg)";}       //down
         enemy.nxtCorner++;
     }
 
+    //the move
     if(enemy.dir === 0){element.style.left = left+1+'vh';}
     else if(enemy.dir === 1){element.style.left = left-1+'vh';}
     else if(enemy.dir === 2){element.style.top = top-1+'vh';}
@@ -253,28 +271,35 @@ function enemyInTowerRange(tower)
     var enemyLeft;
     var enemyElement;
 
-    leftEdge = (Number(tower.position.substring(Number(tower.position.indexOf('c'))+1))-2)*5;
-    rightEdge = (Number(tower.position.substring(Number(tower.position.indexOf('c'))+1))+2)*5;
-    topEdge = (Number(tower.position.substring(1,tower.position.indexOf('c')))-2)*5;
-    bottomEdge = (Number(tower.position.substring(1,tower.position.indexOf('c')))+2)*5;
-
-
-    for(var i = 0; i < enemies.length; i++)
+    if(tower.position !== undefined || tower.position !== null)
     {
-        enemyElement = document.getElementById(enemies[i].id);
-        enemyTop = Number(enemyElement.style.top.substring(0,enemyElement.style.top.indexOf('vh')))+1;
-        enemyLeft = Number(enemyElement.style.left.substring(0,enemyElement.style.left.indexOf('vh')))+1;
+        leftEdge = (Number(tower.position.substring(Number(tower.position.indexOf('c'))+1))-2)*5;
+        rightEdge = (Number(tower.position.substring(Number(tower.position.indexOf('c'))+1))+2)*5;
+        topEdge = (Number(tower.position.substring(1,tower.position.indexOf('c')))-2)*5;
+        bottomEdge = (Number(tower.position.substring(1,tower.position.indexOf('c')))+2)*5;
 
-        //if in radius of tower
-        if((enemyTop > topEdge && enemyTop < bottomEdge) && (enemyLeft > leftEdge && enemyLeft < rightEdge))
+
+        for(var i = 0; i < enemies.length; i++)
         {
-            return [true, enemies[i]];
+            enemyElement = document.getElementById(enemies[i].id);
+            enemyTop = Number(enemyElement.style.top.substring(0,enemyElement.style.top.indexOf('vh')))+1;
+            enemyLeft = Number(enemyElement.style.left.substring(0,enemyElement.style.left.indexOf('vh')))+1;
+
+            //if in radius of tower
+            if((enemyTop > topEdge && enemyTop < bottomEdge) && (enemyLeft > leftEdge && enemyLeft < rightEdge))
+            {
+                return [true, enemies[i]];
+            }
         }
     }
-
     return [false, null];
 }
 
+
+function endGame()
+{
+    document.getElementById('end').style.zIndex = 2;
+}
 //Board -----------------------------------------------------------------------
 
 function createGameBoard()
@@ -575,13 +600,13 @@ function setHighlight2(pos, tower)
                 if(element !== null && (row+radius !== row+i || col+radius !== col+j) && !inInvalidSpaces(element))
                 {
                     document.getElementById('img'+(row+i)+'-'+(col+j)).src = "res/grassT.png";
-                    currentRadiusTiles.push(element.id);
+                    currentRadiusTiles2.push(element.id);
                 }
                 else if((row+radius !== row+i || col+radius !== col+j) && inInvalidSpaces(element) && !onTowers)
                 {
                     if(inCorners(element)){document.getElementById('img'+(row+i)+'-'+(col+j)).src = "res/roadCT.png"}
                     else{document.getElementById('img'+(row+i)+'-'+(col+j)).src = "res/roadT.png";}
-                    currentRadiusTiles.push(element.id);
+                    currentRadiusTiles2.push(element.id);
                 }
                 onTowers = false;
             }
@@ -589,11 +614,11 @@ function setHighlight2(pos, tower)
     }
     else if(pos === null)
     {
-        for(i = 0; i < currentRadiusTiles.length; i++)
+        for(i = 0; i < currentRadiusTiles2.length; i++)
         {
-            element = document.getElementById(currentRadiusTiles[i]);
-            row = Number(currentRadiusTiles[i].substring(1, currentRadiusTiles[i].indexOf('c')));
-            col = Number(currentRadiusTiles[i].substring(Number(currentRadiusTiles[i].indexOf('c'))+1));
+            element = document.getElementById(currentRadiusTiles2[i]);
+            row = Number(currentRadiusTiles2[i].substring(1, currentRadiusTiles2[i].indexOf('c')));
+            col = Number(currentRadiusTiles2[i].substring(Number(currentRadiusTiles2[i].indexOf('c'))+1));
 
             if(!inInvalidSpaces(element))
             {
@@ -606,7 +631,7 @@ function setHighlight2(pos, tower)
             }
             count++;
         }
-        currentRadiusTiles = [];
+        currentRadiusTiles2 = [];
     }
 }
 
@@ -849,6 +874,7 @@ function checkTowerSelected(index, element)
         currentTowers.push(tower);
 
         element.onclick = function(){showTowerInfo(this.id);};
+        if(document.getElementById('start').onclick === null){setTowers();}
         //deselect tower
         deselect(curTower);
     }

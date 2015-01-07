@@ -91,6 +91,27 @@ img
     text-align: center;
 }
 
+/*End Game*/
+#end
+{
+    height: 75vh;
+    width: 75vh;
+    background-color: black;
+    float: left;
+
+    position: absolute;
+    z-index: 0;
+}
+
+#lose
+{
+    font-size: 10vh;
+    color: red;
+    font: 'Roboto', 'sans-serif';
+    position: absolute;
+}
+
+
 /*Board Elements*/
 
 #board
